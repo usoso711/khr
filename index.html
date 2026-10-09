@@ -16,7 +16,7 @@
 button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #6b8afd;outline-offset:2px}
 .wrap{max-width:620px;margin:auto;padding:calc(15px + env(safe-area-inset-top)) 14px calc(90px + env(safe-area-inset-bottom))}
 header{padding:6px 4px 16px}h1{font-size:25px;margin:0 0 5px;letter-spacing:-.4px}.sub{font-size:12px;color:var(--muted)}
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;position:sticky;top:0;z-index:5;background:var(--bg);padding:4px 0 12px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;position:sticky;top:0;z-index:5;background:var(--bg);padding:4px 0 12px}
 .tab{border:0;border-radius:11px;background:#e8ebf0;padding:10px 3px;font-size:12px;font-weight:700;color:#434a55}.tab.active{background:var(--accent);color:white}
 .panel{display:none}.panel.active{display:block}
 .card{background:var(--card);border-radius:17px;padding:17px;margin-bottom:13px;box-shadow:0 3px 12px #1018280a}
@@ -47,13 +47,13 @@ footer{text-align:center;font-size:10px;color:#89909a;padding:8px}
 <div class="wrap">
 <header>
   <h1>🇰🇭 カンボジア生活ツール</h1>
-  <div class="sub">日本人向け｜為替・支出・買い物・生活フレーズ</div>
+  <div class="sub">日本人駐在員向け｜為替・割り勘・便利リンク</div>
 </header>
 <nav class="tabs" aria-label="メニュー">
   <button class="tab active" data-tab="money">💱 為替</button>
-  <button class="tab" data-tab="spend">🧾 支出</button>
+  
   <button class="tab" data-tab="calc">🧮 計算</button>
-  <button class="tab" data-tab="life">🗣️ 生活</button>
+  <button class="tab" data-tab="life">🔗 便利リンク</button>
 </nav>
 
 <section class="panel active" id="money">
@@ -67,6 +67,15 @@ footer{text-align:center;font-size:10px;color:#89909a;padding:8px}
       <button class="btn" data-usd="10">$10</button><button class="btn" data-usd="20">$20</button>
       <button class="btn" data-usd="50">$50</button><button class="btn" data-usd="100">$100</button>
     </div>
+    <h3>リエル紙幣をワンタップ入力</h3>
+    <div class="quick">
+      <button class="btn" data-khr="100">100៛</button><button class="btn" data-khr="500">500៛</button>
+      <button class="btn" data-khr="1000">1,000៛</button><button class="btn" data-khr="2000">2,000៛</button>
+      <button class="btn" data-khr="5000">5,000៛</button><button class="btn" data-khr="10000">10,000៛</button>
+      <button class="btn" data-khr="20000">20,000៛</button><button class="btn" data-khr="50000">50,000៛</button>
+      <button class="btn" data-khr="100000">100,000៛</button>
+    </div>
+    <div class="small" style="margin-top:7px">タップするとリエル欄に金額を入れて、ドル・円換算します。</div>
     <hr>
     <div class="grid2">
       <div class="ratebox"><div class="small">1 USD =</div><div class="big"><span id="rKhr">—</span> KHR</div></div>
@@ -96,34 +105,7 @@ footer{text-align:center;font-size:10px;color:#89909a;padding:8px}
   </div>
 </section>
 
-<section class="panel" id="spend">
-  <div class="card">
-    <h2>支出メモ</h2>
-    <div class="small" style="margin-bottom:12px">日々の支出をUSD・KHR・JPYで記録。データはこの端末のブラウザ内に保存します。</div>
-    <div class="grid2">
-      <div class="field"><label for="expAmount">金額</label><input id="expAmount" inputmode="decimal" placeholder="例：4.50"></div>
-      <div class="field"><label for="expCurrency">通貨</label><select id="expCurrency"><option>USD</option><option>KHR</option><option>JPY</option></select></div>
-    </div>
-    <div class="grid2">
-      <div class="field"><label for="expCategory">カテゴリ</label><select id="expCategory"><option>食費</option><option>カフェ</option><option>交通・トゥクトゥク</option><option>スーパー・日用品</option><option>家賃・光熱費</option><option>通信</option><option>医療</option><option>旅行</option><option>その他</option></select></div>
-      <div class="field"><label for="expDate">日付</label><input id="expDate" type="date"></div>
-    </div>
-    <div class="field"><label for="expMemo">メモ（任意）</label><input id="expMemo" placeholder="例：ランチ、PassApp"></div>
-    <button class="btn primary full" id="addExpense">＋ 支出を記録</button>
-  </div>
-  <div class="card">
-    <div class="row between"><h2>今月の支出</h2><button class="btn" id="exportExpenses">CSV出力</button></div>
-    <div class="result" id="monthlyTotal">$0.00</div>
-    <div class="small" id="monthlyJpy">JPY換算 —</div>
-    <div class="grid2" style="margin-top:12px">
-      <div class="ratebox"><div class="small">記録件数</div><div class="big" id="expenseCount">0</div></div>
-      <div class="ratebox"><div class="small">今月の1日平均</div><div class="big" id="dailyAverage">$0.00</div></div>
-    </div>
-    <hr>
-    <div class="list" id="expenseList"></div>
-    <button class="btn danger full" id="clearExpenses" style="margin-top:12px">すべての支出記録を削除</button>
-  </div>
-</section>
+
 
 <section class="panel" id="calc">
   <div class="card">
@@ -144,8 +126,12 @@ footer{text-align:center;font-size:10px;color:#89909a;padding:8px}
       <div class="field"><label for="billCurrency">通貨</label><select id="billCurrency"><option>USD</option><option>KHR</option><option>JPY</option></select></div>
       <div class="field"><label for="billPeople">人数</label><input id="billPeople" type="number" min="1" step="1" value="2"></div>
     </div>
-    <div class="field"><label for="billTip">チップ・上乗せ（%）</label><input id="billTip" type="number" min="0" step="1" value="0"></div>
-    <button class="btn primary full" id="splitBill">1人あたりを計算</button>
+    <div class="grid2">
+      <div class="field"><label for="billTip">チップ・上乗せ（%）</label><input id="billTip" type="number" min="0" step="1" value="0"></div>
+      <div class="field"><label for="splitMode">割り勘方法</label><select id="splitMode"><option value="equal">均等割り</option><option value="weighted">傾斜をつける</option></select></div>
+    </div>
+    <div class="field" id="weightField" hidden><label for="billWeights">各人の負担比率（カンマ区切り）</label><input id="billWeights" placeholder="例：2,1.5,1,1" inputmode="decimal"><div class="small">人数と同じ数だけ比率を入力。例：2,1,1なら、1人目が2口分、他の2人が1口分ずつ負担します。</div></div>
+    <button class="btn primary full" id="splitBill">割り勘を計算</button>
     <div id="splitResult" style="margin-top:12px"></div>
   </div>
   <div class="card">
@@ -164,32 +150,48 @@ footer{text-align:center;font-size:10px;color:#89909a;padding:8px}
 
 <section class="panel" id="life">
   <div class="card">
-    <h2>すぐ使えるクメール語</h2>
+    <h2>日常で使うアプリ・サービス</h2>
     <div class="list">
-      <div class="phrase"><div class="item-title">こんにちは</div><div class="khmer">សួស្តី</div><div class="small">スオスダイ</div></div>
-      <div class="phrase"><div class="item-title">ありがとう</div><div class="khmer">អរគុណ</div><div class="small">オークン</div></div>
-      <div class="phrase"><div class="item-title">いくらですか？</div><div class="khmer">ថ្លៃប៉ុន្មាន?</div><div class="small">タライ・ポンマーン？</div></div>
-      <div class="phrase"><div class="item-title">高いです</div><div class="khmer">ថ្លៃណាស់</div><div class="small">タライ・ナッ</div></div>
-      <div class="phrase"><div class="item-title">少し安くできますか？</div><div class="khmer">បញ្ចុះតម្លៃបានទេ?</div><div class="small">バンチョッ・タムライ・バーン・テー？</div></div>
-      <div class="phrase"><div class="item-title">ここに行ってください</div><div class="khmer">សូមទៅទីនេះ</div><div class="small">ソーム・タウ・ティニッ</div></div>
-      <div class="phrase"><div class="item-title">おいしいです</div><div class="khmer">ឆ្ងាញ់ណាស់</div><div class="small">チュガイン・ナッ</div></div>
-      <div class="phrase"><div class="item-title">大丈夫です／いりません</div><div class="khmer">អត់ទេ អរគុណ</div><div class="small">オッ・テー、オークン</div></div>
+      <div class="item"><div class="item-title">Telegram</div><div class="item-sub">社内外の連絡・公式チャンネル</div><a href="https://telegram.org/" target="_blank" rel="noopener">公式サイト・アプリ</a></div>
+      <div class="item"><div class="item-title">Grab</div><div class="item-sub">配車・フードデリバリー</div><a href="https://www.grab.com/kh/en/download/" target="_blank" rel="noopener">アプリを入手</a></div>
+      <div class="item"><div class="item-title">PassApp</div><div class="item-sub">トゥクトゥク・配車。公式情報やアプリへの案内</div><a href="https://www.facebook.com/passappkh/" target="_blank" rel="noopener">PassApp公式ページ</a></div>
+      <div class="item"><div class="item-title">cellcard</div><div class="item-sub">SIM・データプラン・チャージ・店舗</div><a href="https://www.cellcard.com.kh/en" target="_blank" rel="noopener">公式サイト</a></div>
+      <div class="item"><div class="item-title">Smart Axiata</div><div class="item-sub">SIM・データプラン・SmartNas</div><a href="https://www.smart.com.kh/" target="_blank" rel="noopener">公式サイト</a></div>
+      <div class="item"><div class="item-title">Canadia Bank</div><div class="item-sub">銀行サービス・モバイルバンキング</div><a href="https://www.canadiabank.com.kh/" target="_blank" rel="noopener">公式サイト</a></div>
+      <div class="item"><div class="item-title">Bakong Tourists</div><div class="item-sub">旅行者向け。カードを連携し、KHQR決済に利用</div><a href="https://bakong.nbc.gov.kh/en/" target="_blank" rel="noopener">NBCのBakong公式ページ</a> · <a href="https://bakong.nbc.gov.kh/download/Bakong_tourists_documents.pdf" target="_blank" rel="noopener">使い方ガイド</a></div>
+      <div class="item"><div class="item-title">Google Maps</div><div class="item-sub">店・病院・施設の検索、経路案内</div><a href="https://maps.google.com/" target="_blank" rel="noopener">地図を開く</a></div>
+      <div class="item"><div class="item-title">Nham24</div><div class="item-sub">フード・日用品のデリバリー。提供状況はアプリで確認</div><a href="https://nham24.com/" target="_blank" rel="noopener">公式サイト</a></div>
     </div>
-    <div class="small" style="margin-top:10px">カタカナは発音の目安です。地域や話者によって発音が異なることがあります。</div>
   </div>
   <div class="card">
-    <h2>生活に役立つメモ</h2>
-    <div class="item"><div class="item-title">💵 現金の確認</div><div class="item-sub">米ドル紙幣は破れ・書き込み・強い汚れがあると受け取りを断られることがあります。受け取り時に状態を確認しましょう。</div></div>
-    <div class="item" style="margin-top:8px"><div class="item-title">🛺 配車アプリ</div><div class="item-sub">乗車前にアプリ上の行き先と料金を確認。現金払いの場合は、USDかKHRかを乗車前に確認しておくと安心です。</div></div>
-    <div class="item" style="margin-top:8px"><div class="item-title">📱 SIM・通信</div><div class="item-sub">SIMの有効期限、データ残量、自動更新の有無を定期的に確認。料金プランは変更されることがあるため公式アプリで確認しましょう。</div></div>
-    <div class="item" style="margin-top:8px"><div class="item-title">🛂 大事な情報</div><div class="item-sub">パスポート、ビザ、保険、勤務先や大使館の連絡先は、オフラインでも確認できる形で別途保管してください。このページには個人情報を入力しないでください。</div></div>
+    <h2>JMC駐在員向け・公的情報</h2>
+    <div class="list">
+      <div class="item"><div class="item-title">National Bank of Cambodia（NBC）</div><div class="item-sub">中央銀行。為替、金融政策、銀行監督、決済制度</div><a href="https://www.nbc.gov.kh/english/" target="_blank" rel="noopener">NBC公式サイト</a></div>
+      <div class="item"><div class="item-title">NBC：金融・経済統計</div><div class="item-sub">銀行貸出・預金金利、CPI、GDP、為替、観光客数など</div><a href="https://www.nbc.gov.kh/english/economic_research/monetary_and_financial_statistics_data.php" target="_blank" rel="noopener">統計データベース</a></div>
+      <div class="item"><div class="item-title">NBC：経済・金融統計月報</div><div class="item-sub">金融セクター・マクロ経済の定期資料</div><a href="https://www.nbc.gov.kh/english/publications/economic_and_monetary_statistics.php" target="_blank" rel="noopener">月報・刊行物</a></div>
+      <div class="item"><div class="item-title">Ministry of Economy and Finance</div><div class="item-sub">財政・予算・経済政策の公的情報</div><a href="https://mef.gov.kh/" target="_blank" rel="noopener">経済財政省</a></div>
+      <div class="item"><div class="item-title">Ministry of Commerce</div><div class="item-sub">企業・商業・事業関連の公的情報</div><a href="https://www.moc.gov.kh/" target="_blank" rel="noopener">商業省</a></div>
+      <div class="item"><div class="item-title">National Institute of Statistics</div><div class="item-sub">国勢調査、人口、物価、労働、社会経済統計</div><a href="https://www.nis.gov.kh/" target="_blank" rel="noopener">統計局</a></div>
+      <div class="item"><div class="item-title">World Bank：Cambodia</div><div class="item-sub">Cambodia Economic Update、マクロ経済・開発レポート</div><a href="https://www.worldbank.org/en/country/cambodia" target="_blank" rel="noopener">国別ページ・レポート</a></div>
+      <div class="item"><div class="item-title">IMF：Cambodia</div><div class="item-sub">国別経済分析、Article IV、金融・財政関連資料</div><a href="https://www.imf.org/en/Countries/KHM" target="_blank" rel="noopener">国別ページ・レポート</a></div>
+      <div class="item"><div class="item-title">Asian Development Bank：Cambodia</div><div class="item-sub">経済見通し、開発・金融セクター資料</div><a href="https://www.adb.org/where-we-work/cambodia" target="_blank" rel="noopener">国別ページ・レポート</a></div>
+      <div class="item"><div class="item-title">Association of Banks in Cambodia</div><div class="item-sub">銀行業界団体・金融セクター情報</div><a href="https://www.abc.org.kh/" target="_blank" rel="noopener">公式サイト</a></div>
+      <div class="item"><div class="item-title">在カンボジア日本国大使館</div><div class="item-sub">安全情報、領事手続き、生活関連のお知らせ</div><a href="https://www.kh.emb-japan.go.jp/itprtop_ja/index.html" target="_blank" rel="noopener">大使館公式サイト</a></div>
+      <div class="item"><div class="item-title">JETRO：カンボジア</div><div class="item-sub">ビジネス環境、制度、投資・市場情報</div><a href="https://www.jetro.go.jp/world/asia/kh/" target="_blank" rel="noopener">国・地域別情報</a></div>
+      <div class="item"><div class="item-title">General Department of Taxation</div><div class="item-sub">税務制度・税務関連のお知らせ</div><a href="https://www.tax.gov.kh/" target="_blank" rel="noopener">税務総局</a></div>
+      <div class="item"><div class="item-title">Council for the Development of Cambodia（CDC）</div><div class="item-sub">投資環境、投資優遇、経済特区など</div><a href="https://cdc.gov.kh/" target="_blank" rel="noopener">CDC公式サイト</a></div>
+      <div class="item"><div class="item-title">Cambodia Immigration</div><div class="item-sub">入国・在留関連の公的情報を確認する入口</div><a href="https://www.immigration.gov.kh/" target="_blank" rel="noopener">入国管理総局</a></div>
+      <div class="item"><div class="item-title">Open Development Cambodia</div><div class="item-sub">土地、経済、人口、環境などの公開データと解説</div><a href="https://opendevelopmentcambodia.net/" target="_blank" rel="noopener">データベース・記事</a></div>
+      <div class="item"><div class="item-title">Khmer Times</div><div class="item-sub">現地ニュース。制度変更や経済動向の把握に</div><a href="https://www.khmertimeskh.com/" target="_blank" rel="noopener">ニュースサイト</a></div>
+    </div>
+    <div class="small" style="margin-top:10px">社内の規程・JMC固有資料は、公開サイトではなく社内の正式な情報源を優先してください。リンク先やアプリの提供状況は変更される場合があります。</div>
   </div>
   <div class="card">
-    <h2>アプリについて</h2>
-    <div class="small">支出メモはこの端末のブラウザ内に保存されます。ブラウザのデータ削除や端末変更で消える場合があります。支出記録には個人情報やカード情報を書かないでください。為替は参考値で、実際の両替レート・手数料とは異なることがあります。</div>
+    <h2>リンク利用時の注意</h2>
+    <div class="small">公式サイトを優先して掲載しています。金融・通信・ビザなどの条件は変わるため、手続き前にリンク先の最新情報を確認してください。為替は参考値で、実際の両替レート・手数料とは異なることがあります。</div>
   </div>
 </section>
-<footer>カンボジア生活ツール · 為替は参考値です</footer>
+<footer>カンボジア生活ツール · 外部リンクは公式情報を優先</footer>
 </div>
 <script>
 const $ = id => document.getElementById(id);
@@ -197,8 +199,6 @@ const fmt = (n, d=2) => Number.isFinite(n) ? new Intl.NumberFormat('en-US',{maxi
 let rates = {usdKhr:null, usdJpy:null};
 let rateMode = 'auto';
 let activeCurrency = null;
-let expenses = [];
-try { expenses = JSON.parse(localStorage.getItem('khmerLifeExpenses') || '[]'); if(!Array.isArray(expenses)) expenses=[]; } catch { expenses=[]; }
 
 function parseNum(v) {
   const s=String(v??'').replace(/,/g,'').trim();
@@ -244,6 +244,7 @@ $('usd').addEventListener('input',e=>convert(e.target,'USD'));
 $('khr').addEventListener('input',e=>convert(e.target,'KHR'));
 $('jpy').addEventListener('input',e=>convert(e.target,'JPY'));
 document.querySelectorAll('[data-usd]').forEach(b=>b.addEventListener('click',()=>{ $('usd').value=b.dataset.usd; convert($('usd'),'USD'); }));
+document.querySelectorAll('[data-khr]').forEach(b=>b.addEventListener('click',()=>{ $('khr').value=b.dataset.khr; convert($('khr'),'KHR'); }));
 function renderRates(date='—') {
   $('rKhr').textContent=fmt(rates.usdKhr,2); $('rJpy').textContent=fmt(rates.usdJpy,2);
   $('rJpyKhr').textContent=rates.usdKhr&&rates.usdJpy?fmt(rates.usdKhr/rates.usdJpy,4):'—';
@@ -252,7 +253,6 @@ function renderRates(date='—') {
   $('quick4000').textContent=rates.usdKhr?('$'+fmt(4000/rates.usdKhr,2)):'—';
   $('quick10000').textContent=rates.usdKhr?('$'+fmt(10000/rates.usdKhr,2)):'—';
   $('quick20000').textContent=rates.usdKhr?('$'+fmt(20000/rates.usdKhr,2)):'—';
-  renderExpenses();
 }
 async function loadRates() {
   $('rateMessage').textContent='為替レートを取得しています…';
@@ -309,57 +309,23 @@ document.querySelectorAll('[data-key]').forEach(btn=>btn.addEventListener('click
   calcDisplay();
 }));
 
-/* expense tracker */
-const today=new Date();
-$('expDate').value=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-function saveExpenses(){try{localStorage.setItem('khmerLifeExpenses',JSON.stringify(expenses));}catch{alert('端末に保存できませんでした。ブラウザの設定を確認してください。');}}
-function renderExpenses(){
-  const month=$('expDate').value.slice(0,7)||`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}`;
-  const list=expenses.filter(e=>e.date&&e.date.slice(0,7)===month);
-  let total=0;
-  list.forEach(e=>{const u=toUSD(e.amount,e.currency);if(Number.isFinite(u))total+=u;});
-  $('monthlyTotal').textContent='$'+fmt(total,2);
-  $('monthlyJpy').textContent=rates.usdJpy?'JPY換算 ¥'+fmt(total*rates.usdJpy,0):'JPY換算 —（レート未取得）';
-  $('expenseCount').textContent=String(list.length);
-  const [yy,mm]=month.split('-').map(Number);const days=Math.max(1,Math.min(new Date(yy,mm,0).getDate(),today.getDate()));
-  $('dailyAverage').textContent='$'+fmt(total/days,2);
-  $('expenseList').innerHTML='';
-  if(!list.length){$('expenseList').innerHTML='<div class="small">この月の支出はまだありません。</div>';return;}
-  list.slice().sort((a,b)=>(b.date+b.id).localeCompare(a.date+a.id)).forEach(e=>{
-    const row=document.createElement('div');row.className='item expense';
-    const left=document.createElement('div');const title=document.createElement('div');title.className='item-title';title.textContent=`${e.category} · ${e.memo||'メモなし'}`;
-    const sub=document.createElement('div');sub.className='item-sub';sub.textContent=`${e.date} · ${e.currency} ${fmt(e.amount,2)}`;
-    left.append(title,sub);
-    const del=document.createElement('button');del.setAttribute('aria-label','この記録を削除');del.textContent='×';
-    del.addEventListener('click',()=>{expenses=expenses.filter(x=>x.id!==e.id);saveExpenses();renderExpenses();});
-    row.append(left,del);$('expenseList').append(row);
-  });
-}
-$('addExpense').addEventListener('click',()=>{
-  const amount=parseNum($('expAmount').value),date=$('expDate').value;
-  if(!Number.isFinite(amount)||amount<0||!date){alert('金額と日付を正しく入力してください。');return;}
-  expenses.push({id:String(Date.now())+Math.random().toString(16).slice(2),amount,currency:$('expCurrency').value,category:$('expCategory').value,date,memo:$('expMemo').value.trim()});
-  saveExpenses();$('expAmount').value='';$('expMemo').value='';renderExpenses();
-});
-$('expDate').addEventListener('change',renderExpenses);
-$('clearExpenses').addEventListener('click',()=>{if(confirm('支出記録をすべて削除します。この操作は取り消せません。')){expenses=[];saveExpenses();renderExpenses();}});
-$('exportExpenses').addEventListener('click',()=>{
-  if(!expenses.length){alert('出力する支出記録がありません。');return;}
-  const rows=[['日付','金額','通貨','カテゴリ','メモ'],...expenses.map(e=>[e.date,e.amount,e.currency,e.category,e.memo])];
-  const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');
-  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
-  const a=document.createElement('a');a.href=url;a.download='cambodia-expenses.csv';a.click();URL.revokeObjectURL(url);
-});
-
-/* split bill */
+/* split bill with optional weighted shares */
+$('splitMode').addEventListener('change',()=>{ $('weightField').hidden=$('splitMode').value!=='weighted'; });
 $('splitBill').addEventListener('click',()=>{
   const amount=parseNum($('billAmount').value),people=parseInt($('billPeople').value,10),tip=parseNum($('billTip').value)||0,currency=$('billCurrency').value;
   if(!Number.isFinite(amount)||amount<0||!(people>0)||tip<0){alert('金額・人数・チップを確認してください。');return;}
-  const per=(amount*(1+tip/100))/people;
+  let weights=Array(people).fill(1);
+  if($('splitMode').value==='weighted'){
+    weights=$('billWeights').value.split(',').map(x=>parseNum(x.trim()));
+    if(weights.length!==people||weights.some(x=>!Number.isFinite(x)||x<=0)){alert(`人数分の比率を入力してください（${people}人なら数値を${people}個）。比率はすべて0より大きくしてください。`);return;}
+  }
+  const total=amount*(1+tip/100),sum=weights.reduce((a,b)=>a+b,0);
   $('splitResult').innerHTML='';
-  const p=document.createElement('div');p.className='result';p.textContent=currency+' '+fmt(per,2);
-  const s=document.createElement('div');s.className='small';s.textContent=`合計 ${currency} ${fmt(amount*(1+tip/100),2)}（チップ ${tip}%込み）`;
-  $('splitResult').append(p,s);
+  const top=document.createElement('div');top.className='result';top.textContent=`合計 ${currency} ${fmt(total,2)}`;$('splitResult').append(top);
+  const list=document.createElement('div');list.className='list';list.style.marginTop='10px';
+  weights.forEach((w,i)=>{const row=document.createElement('div');row.className='item';row.innerHTML='';const title=document.createElement('div');title.className='item-title';title.textContent=`${i+1}人目：${currency} ${fmt(total*w/sum,2)}`;const sub=document.createElement('div');sub.className='item-sub';sub.textContent=`負担比率 ${w}（全体の${fmt(w/sum*100,1)}%）`;row.append(title,sub);list.append(row);});
+  const note=document.createElement('div');note.className='small';note.style.marginTop='8px';note.textContent=`チップ・上乗せ ${tip}%込み。比率合計 ${fmt(sum,2)}。表示額は小数第2位までの目安です。`;
+  $('splitResult').append(list,note);
 });
 
 /* compare prices */
@@ -373,7 +339,6 @@ $('comparePrices').addEventListener('click',()=>{
   $('compareResult').append(p,s);
 }
 );
-renderExpenses();
 loadRates();
 if('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
