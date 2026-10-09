@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f6f8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="カンボジア生活">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>カンボジア生活ツール</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--ink:#20242a;--muted:#69717c;--line:#e5e8ec;--accent:#172033;--soft:#eef1f5;--green:#16794b;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Sans",Arial,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #6b8afd;outline-offset:2px}
+.wrap{max-width:620px;margin:auto;padding:calc(15px + env(safe-area-inset-top)) 14px calc(90px + env(safe-area-inset-bottom))}
+header{padding:6px 4px 16px}h1{font-size:25px;margin:0 0 5px;letter-spacing:-.4px}.sub{font-size:12px;color:var(--muted)}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;position:sticky;top:0;z-index:5;background:var(--bg);padding:4px 0 12px}
+.tab{border:0;border-radius:11px;background:#e8ebf0;padding:10px 3px;font-size:12px;font-weight:700;color:#434a55}.tab.active{background:var(--accent);color:white}
+.panel{display:none}.panel.active{display:block}
+.card{background:var(--card);border-radius:17px;padding:17px;margin-bottom:13px;box-shadow:0 3px 12px #1018280a}
+h2{font-size:16px;margin:0 0 13px}h3{font-size:13px;margin:14px 0 8px}
+.small{font-size:11px;line-height:1.55;color:var(--muted)}.muted{color:var(--muted)}.row{display:flex;align-items:center;gap:9px}.row>*{min-width:0}.between{justify-content:space-between}
+.field{margin:0 0 11px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+input,select,textarea{width:100%;border:1px solid #dce1e7;background:#fafbfc;border-radius:10px;padding:12px;color:var(--ink);min-width:0}
+.money{font-size:21px;text-align:right;font-variant-numeric:tabular-nums}
+.btn{border:0;border-radius:11px;padding:12px 14px;font-weight:700;font-size:13px;background:var(--soft);color:var(--ink)}
+.btn.primary{background:var(--accent);color:white}.btn.full{width:100%}.btn.danger{color:var(--red);background:#fff0ef}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ratebox{background:#f6f7f9;border-radius:12px;padding:12px}.ratebox .big{font-weight:750;font-size:17px;margin-top:3px;overflow-wrap:anywhere}
+.quick{display:flex;gap:7px;flex-wrap:wrap}.quick .btn{padding:9px 11px}
+.result{font-size:24px;font-weight:800;letter-spacing:-.5px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+.pill{font-size:11px;background:#edf5ef;color:#226344;padding:5px 8px;border-radius:99px}
+.khr-note{background:#fff8e8;border-radius:12px;padding:12px;font-size:12px;line-height:1.6}
+.list{display:grid;gap:8px}.item{border:1px solid var(--line);border-radius:12px;padding:11px}.item-title{font-weight:700;font-size:13px}.item-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.keypad{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.keypad button{border:0;border-radius:10px;background:#edf0f3;padding:15px 4px;font-size:18px}.keypad .op{background:#dce1e8;font-weight:800}.keypad .eq{background:#172033;color:white}.keypad .clear{background:#fae7e5}
+.expense{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.expense button{border:0;background:transparent;color:var(--red);font-size:18px}
+.phrase{padding:12px;border-radius:12px;background:#f7f8fa}.khmer{font-size:20px;font-weight:700;margin:5px 0}
+footer{text-align:center;font-size:10px;color:#89909a;padding:8px}
+@media(min-width:520px){.wrap{padding-left:20px;padding-right:20px}.tab{font-size:13px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🇰🇭 カンボジア生活ツール</h1>
+  <div class="sub">日本人向け｜為替・支出・買い物・生活フレーズ</div>
+</header>
+<nav class="tabs" aria-label="メニュー">
+  <button class="tab active" data-tab="money">💱 為替</button>
+  <button class="tab" data-tab="spend">🧾 支出</button>
+  <button class="tab" data-tab="calc">🧮 計算</button>
+  <button class="tab" data-tab="life">🗣️ 生活</button>
+</nav>
+
+<section class="panel active" id="money">
+  <div class="card">
+    <div class="row between"><h2>通貨換算</h2><span class="pill" id="rateStatus">レート未取得</span></div>
+    <div class="field"><label for="usd">USD・米ドル</label><input class="money" id="usd" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+    <div class="field"><label for="khr">KHR・リエル</label><input class="money" id="khr" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+    <div class="field"><label for="jpy">JPY・日本円</label><input class="money" id="jpy" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+    <div class="quick">
+      <button class="btn" data-usd="1">$1</button><button class="btn" data-usd="5">$5</button>
+      <button class="btn" data-usd="10">$10</button><button class="btn" data-usd="20">$20</button>
+      <button class="btn" data-usd="50">$50</button><button class="btn" data-usd="100">$100</button>
+    </div>
+    <hr>
+    <div class="grid2">
+      <div class="ratebox"><div class="small">1 USD =</div><div class="big"><span id="rKhr">—</span> KHR</div></div>
+      <div class="ratebox"><div class="small">1 USD =</div><div class="big">¥<span id="rJpy">—</span></div></div>
+      <div class="ratebox"><div class="small">1 JPY =</div><div class="big"><span id="rJpyKhr">—</span> KHR</div></div>
+      <div class="ratebox"><div class="small">レート日付</div><div class="big" id="rDate">—</div></div>
+    </div>
+    <div class="small" id="rateMessage" style="margin-top:10px">為替レートを取得しています…</div>
+    <button class="btn primary full" id="refreshRates" style="margin-top:12px">🔄 最新レートを取得</button>
+    <button class="btn full" id="toggleManual" style="margin-top:8px">⚙️ レートを手動設定</button>
+    <div id="manualRates" hidden style="margin-top:12px">
+      <div class="field"><label for="mKhr">1 USD = KHR（例：4000）</label><input id="mKhr" inputmode="decimal" type="number" step="0.01"></div>
+      <div class="field"><label for="mJpy">1 USD = JPY</label><input id="mJpy" inputmode="decimal" type="number" step="0.01"></div>
+      <button class="btn primary full" id="applyManual">このレートを使用</button>
+      <button class="btn full" id="restoreRates" style="margin-top:7px">自動レートに戻す</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>リエル ⇄ ドル 早見</h2>
+    <div class="khr-note">カンボジアでは米ドルとリエルが併用されます。現地でよく使われる目安レートを手動設定できます。実際の店・銀行・両替所のレートやお釣りの条件を優先してください。</div>
+    <div class="grid3" style="margin-top:10px">
+      <div class="ratebox"><div class="small">4,000៛</div><div class="big" id="quick4000">$1.00</div></div>
+      <div class="ratebox"><div class="small">10,000៛</div><div class="big" id="quick10000">—</div></div>
+      <div class="ratebox"><div class="small">20,000៛</div><div class="big" id="quick20000">—</div></div>
+    </div>
+    <div class="small" style="margin-top:9px">早見表は目安として表示します。設定したKHR/USDレートと異なる場合があります。</div>
+  </div>
+</section>
+
+<section class="panel" id="spend">
+  <div class="card">
+    <h2>支出メモ</h2>
+    <div class="small" style="margin-bottom:12px">日々の支出をUSD・KHR・JPYで記録。データはこの端末のブラウザ内に保存します。</div>
+    <div class="grid2">
+      <div class="field"><label for="expAmount">金額</label><input id="expAmount" inputmode="decimal" placeholder="例：4.50"></div>
+      <div class="field"><label for="expCurrency">通貨</label><select id="expCurrency"><option>USD</option><option>KHR</option><option>JPY</option></select></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label for="expCategory">カテゴリ</label><select id="expCategory"><option>食費</option><option>カフェ</option><option>交通・トゥクトゥク</option><option>スーパー・日用品</option><option>家賃・光熱費</option><option>通信</option><option>医療</option><option>旅行</option><option>その他</option></select></div>
+      <div class="field"><label for="expDate">日付</label><input id="expDate" type="date"></div>
+    </div>
+    <div class="field"><label for="expMemo">メモ（任意）</label><input id="expMemo" placeholder="例：ランチ、PassApp"></div>
+    <button class="btn primary full" id="addExpense">＋ 支出を記録</button>
+  </div>
+  <div class="card">
+    <div class="row between"><h2>今月の支出</h2><button class="btn" id="exportExpenses">CSV出力</button></div>
+    <div class="result" id="monthlyTotal">$0.00</div>
+    <div class="small" id="monthlyJpy">JPY換算 —</div>
+    <div class="grid2" style="margin-top:12px">
+      <div class="ratebox"><div class="small">記録件数</div><div class="big" id="expenseCount">0</div></div>
+      <div class="ratebox"><div class="small">今月の1日平均</div><div class="big" id="dailyAverage">$0.00</div></div>
+    </div>
+    <hr>
+    <div class="list" id="expenseList"></div>
+    <button class="btn danger full" id="clearExpenses" style="margin-top:12px">すべての支出記録を削除</button>
+  </div>
+</section>
+
+<section class="panel" id="calc">
+  <div class="card">
+    <h2>電卓</h2>
+    <div class="calc-display" id="calcDisplay" aria-live="polite">0</div>
+    <div class="keypad">
+      <button class="clear" data-key="AC">AC</button><button data-key="DEL">⌫</button><button class="op" data-key="%">%</button><button class="op" data-key="/">÷</button>
+      <button data-key="7">7</button><button data-key="8">8</button><button data-key="9">9</button><button class="op" data-key="*">×</button>
+      <button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button><button class="op" data-key="-">−</button>
+      <button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button><button class="op" data-key="+">＋</button>
+      <button data-key="0">0</button><button data-key=".">.</button><button class="eq" style="grid-column:span 2" data-key="=">＝</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>割り勘計算</h2>
+    <div class="field"><label for="billAmount">合計金額</label><input id="billAmount" inputmode="decimal" placeholder="例：23.50"></div>
+    <div class="grid2">
+      <div class="field"><label for="billCurrency">通貨</label><select id="billCurrency"><option>USD</option><option>KHR</option><option>JPY</option></select></div>
+      <div class="field"><label for="billPeople">人数</label><input id="billPeople" type="number" min="1" step="1" value="2"></div>
+    </div>
+    <div class="field"><label for="billTip">チップ・上乗せ（%）</label><input id="billTip" type="number" min="0" step="1" value="0"></div>
+    <button class="btn primary full" id="splitBill">1人あたりを計算</button>
+    <div id="splitResult" style="margin-top:12px"></div>
+  </div>
+  <div class="card">
+    <h2>値段の比較</h2>
+    <div class="small">商品価格を同じ通貨に換算して比べます。</div>
+    <div class="grid2" style="margin-top:10px">
+      <div class="field"><label for="priceA">商品Aの価格</label><input id="priceA" inputmode="decimal" placeholder="0"></div>
+      <div class="field"><label for="currencyA">通貨</label><select id="currencyA"><option>USD</option><option>KHR</option><option>JPY</option></select></div>
+      <div class="field"><label for="priceB">商品Bの価格</label><input id="priceB" inputmode="decimal" placeholder="0"></div>
+      <div class="field"><label for="currencyB">通貨</label><select id="currencyB"><option>KHR</option><option>USD</option><option>JPY</option></select></div>
+    </div>
+    <button class="btn primary full" id="comparePrices">比較する</button>
+    <div id="compareResult" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<section class="panel" id="life">
+  <div class="card">
+    <h2>すぐ使えるクメール語</h2>
+    <div class="list">
+      <div class="phrase"><div class="item-title">こんにちは</div><div class="khmer">សួស្តី</div><div class="small">スオスダイ</div></div>
+      <div class="phrase"><div class="item-title">ありがとう</div><div class="khmer">អរគុណ</div><div class="small">オークン</div></div>
+      <div class="phrase"><div class="item-title">いくらですか？</div><div class="khmer">ថ្លៃប៉ុន្មាន?</div><div class="small">タライ・ポンマーン？</div></div>
+      <div class="phrase"><div class="item-title">高いです</div><div class="khmer">ថ្លៃណាស់</div><div class="small">タライ・ナッ</div></div>
+      <div class="phrase"><div class="item-title">少し安くできますか？</div><div class="khmer">បញ្ចុះតម្លៃបានទេ?</div><div class="small">バンチョッ・タムライ・バーン・テー？</div></div>
+      <div class="phrase"><div class="item-title">ここに行ってください</div><div class="khmer">សូមទៅទីនេះ</div><div class="small">ソーム・タウ・ティニッ</div></div>
+      <div class="phrase"><div class="item-title">おいしいです</div><div class="khmer">ឆ្ងាញ់ណាស់</div><div class="small">チュガイン・ナッ</div></div>
+      <div class="phrase"><div class="item-title">大丈夫です／いりません</div><div class="khmer">អត់ទេ អរគុណ</div><div class="small">オッ・テー、オークン</div></div>
+    </div>
+    <div class="small" style="margin-top:10px">カタカナは発音の目安です。地域や話者によって発音が異なることがあります。</div>
+  </div>
+  <div class="card">
+    <h2>生活に役立つメモ</h2>
+    <div class="item"><div class="item-title">💵 現金の確認</div><div class="item-sub">米ドル紙幣は破れ・書き込み・強い汚れがあると受け取りを断られることがあります。受け取り時に状態を確認しましょう。</div></div>
+    <div class="item" style="margin-top:8px"><div class="item-title">🛺 配車アプリ</div><div class="item-sub">乗車前にアプリ上の行き先と料金を確認。現金払いの場合は、USDかKHRかを乗車前に確認しておくと安心です。</div></div>
+    <div class="item" style="margin-top:8px"><div class="item-title">📱 SIM・通信</div><div class="item-sub">SIMの有効期限、データ残量、自動更新の有無を定期的に確認。料金プランは変更されることがあるため公式アプリで確認しましょう。</div></div>
+    <div class="item" style="margin-top:8px"><div class="item-title">🛂 大事な情報</div><div class="item-sub">パスポート、ビザ、保険、勤務先や大使館の連絡先は、オフラインでも確認できる形で別途保管してください。このページには個人情報を入力しないでください。</div></div>
+  </div>
+  <div class="card">
+    <h2>アプリについて</h2>
+    <div class="small">支出メモはこの端末のブラウザ内に保存されます。ブラウザのデータ削除や端末変更で消える場合があります。支出記録には個人情報やカード情報を書かないでください。為替は参考値で、実際の両替レート・手数料とは異なることがあります。</div>
+  </div>
+</section>
+<footer>カンボジア生活ツール · 為替は参考値です</footer>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const fmt = (n, d=2) => Number.isFinite(n) ? new Intl.NumberFormat('en-US',{maximumFractionDigits:d}).format(n) : '—';
+let rates = {usdKhr:null, usdJpy:null};
+let rateMode = 'auto';
+let activeCurrency = null;
+let expenses = [];
+try { expenses = JSON.parse(localStorage.getItem('khmerLifeExpenses') || '[]'); if(!Array.isArray(expenses)) expenses=[]; } catch { expenses=[]; }
+
+function parseNum(v) {
+  const s=String(v??'').replace(/,/g,'').trim();
+  if(!s || s==='-' || s==='.' || s==='-.') return NaN;
+  const n=Number(s); return Number.isFinite(n)?n:NaN;
+}
+function prettyInput(el) {
+  const raw=el.value.replace(/,/g,'').replace(/[^\d.-]/g,'');
+  const neg=raw.startsWith('-');
+  const clean=raw.replace(/-/g,'');
+  const i=clean.indexOf('.');
+  let integer=(i<0?clean:clean.slice(0,i)).replace(/\D/g,'').replace(/^0+(?=\d)/,'');
+  if(!integer) integer='0';
+  const decimal=i<0?'':'.'+clean.slice(i+1).replace(/\./g,'').replace(/\D/g,'');
+  el.value=(neg?'-':'')+integer.replace(/\B(?=(\d{3})+(?!\d))/g,',')+decimal;
+}
+function toUSD(value,currency) {
+  if(!Number.isFinite(value)) return NaN;
+  if(currency==='USD') return value;
+  if(currency==='KHR' && rates.usdKhr) return value/rates.usdKhr;
+  if(currency==='JPY' && rates.usdJpy) return value/rates.usdJpy;
+  return NaN;
+}
+function fromUSD(usd,currency) {
+  if(!Number.isFinite(usd)) return NaN;
+  if(currency==='USD') return usd;
+  if(currency==='KHR' && rates.usdKhr) return usd*rates.usdKhr;
+  if(currency==='JPY' && rates.usdJpy) return usd*rates.usdJpy;
+  return NaN;
+}
+function setMoney(el,n,d=2) { el.value=Number.isFinite(n)?fmt(Number(n.toFixed(d)),d):''; }
+function convert(source,currency) {
+  activeCurrency=currency;
+  if(source.value.trim()===''){['usd','khr','jpy'].forEach(id=>$(id).value='');return;}
+  prettyInput(source);
+  const amount=parseNum(source.value), usd=toUSD(amount,currency);
+  if(!Number.isFinite(usd)) return;
+  if(currency!=='USD') setMoney($('usd'),usd,6);
+  if(currency!=='KHR') setMoney($('khr'),fromUSD(usd,'KHR'),2);
+  if(currency!=='JPY') setMoney($('jpy'),fromUSD(usd,'JPY'),2);
+}
+$('usd').addEventListener('input',e=>convert(e.target,'USD'));
+$('khr').addEventListener('input',e=>convert(e.target,'KHR'));
+$('jpy').addEventListener('input',e=>convert(e.target,'JPY'));
+document.querySelectorAll('[data-usd]').forEach(b=>b.addEventListener('click',()=>{ $('usd').value=b.dataset.usd; convert($('usd'),'USD'); }));
+function renderRates(date='—') {
+  $('rKhr').textContent=fmt(rates.usdKhr,2); $('rJpy').textContent=fmt(rates.usdJpy,2);
+  $('rJpyKhr').textContent=rates.usdKhr&&rates.usdJpy?fmt(rates.usdKhr/rates.usdJpy,4):'—';
+  $('rDate').textContent=date;
+  $('rateStatus').textContent=rateMode==='manual'?'手動レート':'自動レート';
+  $('quick4000').textContent=rates.usdKhr?('$'+fmt(4000/rates.usdKhr,2)):'—';
+  $('quick10000').textContent=rates.usdKhr?('$'+fmt(10000/rates.usdKhr,2)):'—';
+  $('quick20000').textContent=rates.usdKhr?('$'+fmt(20000/rates.usdKhr,2)):'—';
+  renderExpenses();
+}
+async function loadRates() {
+  $('rateMessage').textContent='為替レートを取得しています…';
+  try {
+    const [a,b]=await Promise.all([
+      fetch('https://api.frankfurter.dev/v2/rate/USD/JPY'),
+      fetch('https://api.frankfurter.dev/v2/rate/USD/KHR')
+    ]);
+    if(!a.ok||!b.ok) throw new Error();
+    const [j,k]=await Promise.all([a.json(),b.json()]);
+    if(!(j.rate>0&&k.rate>0)) throw new Error();
+    rates={usdJpy:j.rate,usdKhr:k.rate}; rateMode='auto';
+    $('rateMessage').textContent='自動取得した参考レート。銀行・両替所の実勢レートとは異なる場合があります。';
+    renderRates(k.date||j.date);
+    recalcActive();
+  } catch {
+    $('rateMessage').textContent='自動取得できませんでした。ネット接続を確認するか、手動レートを設定してください。';
+    $('rateStatus').textContent='レート未取得';
+  }
+}
+function recalcActive() {
+  if(!activeCurrency) return;
+  const el=$({USD:'usd',KHR:'khr',JPY:'jpy'}[activeCurrency]);
+  const v=parseNum(el.value);
+  if(Number.isFinite(v)) convert(el,activeCurrency);
+}
+$('refreshRates').addEventListener('click',loadRates);
+$('toggleManual').addEventListener('click',()=>{$('manualRates').hidden=!$('manualRates').hidden;});
+$('applyManual').addEventListener('click',()=>{
+  const k=parseNum($('mKhr').value),j=parseNum($('mJpy').value);
+  if(!(k>0&&j>0)){alert('正しいレートを入力してください。');return;}
+  rates={usdKhr:k,usdJpy:j};rateMode='manual';$('rateMessage').textContent='手動設定したレートを使用中です。';
+  renderRates('手動設定');recalcActive();
+});
+$('restoreRates').addEventListener('click',loadRates);
+
+/* tabs */
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===btn));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===btn.dataset.tab));
+}));
+
+/* calculator */
+let expression='';
+function calcDisplay(){ $('calcDisplay').textContent=expression.replace(/\*/g,'×').replace(/\//g,'÷')||'0'; }
+document.querySelectorAll('[data-key]').forEach(btn=>btn.addEventListener('click',()=>{
+  const k=btn.dataset.key;
+  if(k==='AC'){expression='';}
+  else if(k==='DEL'){expression=expression.slice(0,-1);}
+  else if(k==='='){
+    if(!expression||/[+\-*/%]$/.test(expression)||!/^[0-9.+\-*/%]+$/.test(expression))return;
+    try{const n=Function('"use strict";return ('+expression+')')();if(!Number.isFinite(n))throw 0;expression=String(Number(n.toFixed(10)));}catch{expression='Error';}
+  } else {if(expression==='Error')expression='';if(/[+\-*/%]$/.test(expression)&&/[+\-*/%]/.test(k))expression=expression.slice(0,-1);expression+=k;}
+  calcDisplay();
+}));
+
+/* expense tracker */
+const today=new Date();
+$('expDate').value=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+function saveExpenses(){try{localStorage.setItem('khmerLifeExpenses',JSON.stringify(expenses));}catch{alert('端末に保存できませんでした。ブラウザの設定を確認してください。');}}
+function renderExpenses(){
+  const month=$('expDate').value.slice(0,7)||`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}`;
+  const list=expenses.filter(e=>e.date&&e.date.slice(0,7)===month);
+  let total=0;
+  list.forEach(e=>{const u=toUSD(e.amount,e.currency);if(Number.isFinite(u))total+=u;});
+  $('monthlyTotal').textContent='$'+fmt(total,2);
+  $('monthlyJpy').textContent=rates.usdJpy?'JPY換算 ¥'+fmt(total*rates.usdJpy,0):'JPY換算 —（レート未取得）';
+  $('expenseCount').textContent=String(list.length);
+  const [yy,mm]=month.split('-').map(Number);const days=Math.max(1,Math.min(new Date(yy,mm,0).getDate(),today.getDate()));
+  $('dailyAverage').textContent='$'+fmt(total/days,2);
+  $('expenseList').innerHTML='';
+  if(!list.length){$('expenseList').innerHTML='<div class="small">この月の支出はまだありません。</div>';return;}
+  list.slice().sort((a,b)=>(b.date+b.id).localeCompare(a.date+a.id)).forEach(e=>{
+    const row=document.createElement('div');row.className='item expense';
+    const left=document.createElement('div');const title=document.createElement('div');title.className='item-title';title.textContent=`${e.category} · ${e.memo||'メモなし'}`;
+    const sub=document.createElement('div');sub.className='item-sub';sub.textContent=`${e.date} · ${e.currency} ${fmt(e.amount,2)}`;
+    left.append(title,sub);
+    const del=document.createElement('button');del.setAttribute('aria-label','この記録を削除');del.textContent='×';
+    del.addEventListener('click',()=>{expenses=expenses.filter(x=>x.id!==e.id);saveExpenses();renderExpenses();});
+    row.append(left,del);$('expenseList').append(row);
+  });
+}
+$('addExpense').addEventListener('click',()=>{
+  const amount=parseNum($('expAmount').value),date=$('expDate').value;
+  if(!Number.isFinite(amount)||amount<0||!date){alert('金額と日付を正しく入力してください。');return;}
+  expenses.push({id:String(Date.now())+Math.random().toString(16).slice(2),amount,currency:$('expCurrency').value,category:$('expCategory').value,date,memo:$('expMemo').value.trim()});
+  saveExpenses();$('expAmount').value='';$('expMemo').value='';renderExpenses();
+});
+$('expDate').addEventListener('change',renderExpenses);
+$('clearExpenses').addEventListener('click',()=>{if(confirm('支出記録をすべて削除します。この操作は取り消せません。')){expenses=[];saveExpenses();renderExpenses();}});
+$('exportExpenses').addEventListener('click',()=>{
+  if(!expenses.length){alert('出力する支出記録がありません。');return;}
+  const rows=[['日付','金額','通貨','カテゴリ','メモ'],...expenses.map(e=>[e.date,e.amount,e.currency,e.category,e.memo])];
+  const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  const a=document.createElement('a');a.href=url;a.download='cambodia-expenses.csv';a.click();URL.revokeObjectURL(url);
+});
+
+/* split bill */
+$('splitBill').addEventListener('click',()=>{
+  const amount=parseNum($('billAmount').value),people=parseInt($('billPeople').value,10),tip=parseNum($('billTip').value)||0,currency=$('billCurrency').value;
+  if(!Number.isFinite(amount)||amount<0||!(people>0)||tip<0){alert('金額・人数・チップを確認してください。');return;}
+  const per=(amount*(1+tip/100))/people;
+  $('splitResult').innerHTML='';
+  const p=document.createElement('div');p.className='result';p.textContent=currency+' '+fmt(per,2);
+  const s=document.createElement('div');s.className='small';s.textContent=`合計 ${currency} ${fmt(amount*(1+tip/100),2)}（チップ ${tip}%込み）`;
+  $('splitResult').append(p,s);
+});
+
+/* compare prices */
+$('comparePrices').addEventListener('click',()=>{
+  const a=parseNum($('priceA').value),b=parseNum($('priceB').value),ca=$('currencyA').value,cb=$('currencyB').value;
+  const ua=toUSD(a,ca),ub=toUSD(b,cb);
+  $('compareResult').textContent='';
+  if(!Number.isFinite(ua)||!Number.isFinite(ub)){ $('compareResult').textContent='為替レート取得後に、正しい価格を入力してください。';return;}
+  const p=document.createElement('div');p.className='result';p.textContent=ua<ub?'商品Aの方が安い':ua>ub?'商品Bの方が安い':'同じ価格です';
+  const s=document.createElement('div');s.className='small';s.textContent=`商品A：約$${fmt(ua)} ／ 商品B：約$${fmt(ub)}`;
+  $('compareResult').append(p,s);
+}
+);
+renderExpenses();
+loadRates();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
